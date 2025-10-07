@@ -1,42 +1,15 @@
 import axios from "axios";
 
-const headerJson = {
-  "Content-Type": "application/json",
-};
+// URL do seu back-end publicado na Vercel
+const API_URL = "https://aos-2025-2-i8gv.vercel.app";
 
-const instance = axios.create({
-  baseURL: "https://parseapi.back4app.com",
-  timeout: 1000,
-  headers: {
-    "X-Parse-Application-Id": "lzQ61WWmjSxYma4dOZSVhO5Ofo9HQ0WaXT1bTRyY",
-    "X-Parse-JavaScript-Key": "VzOBLroXdlFsuyozWeDEVGHSB4PGNJkpTbXUeSWk",
-  },
+const api = axios.create({
+  baseURL: API_URL,
 });
 
-export async function getTarefas() {
-  const { data } = await instance.get("/classes/Tarefa");
-  return data?.results;
-}
+export const getTasks = () => api.get("/tarefas");
+export const createTask = (task) => api.post("/tarefas", task);
+export const updateTask = (id, task) => api.put(`/tarefas/${id}`, task);
+export const deleteTask = (id) => api.delete(`/tarefas/${id}`);
 
-export async function updateTarefa(tarefa) {
-  const { data } = await instance.put(
-    `/classes/Tarefa/${tarefa.objectId}`,
-    { descricao: tarefa.descricao, concluida: tarefa.concluida },
-    { headers: headerJson }
-  );
-  return data;
-}
-
-export async function addTarefa({ descricao }) {
-  const { data } = await instance.post(
-    `/classes/Tarefa`,
-    { descricao },
-    { headers: headerJson }
-  );
-  return data;
-}
-
-export async function deleteTarefa(tarefa) {
-  const { data } = await instance.delete(`/classes/Tarefa/${tarefa.objectId}`);
-  return data;
-}
+export default api;
